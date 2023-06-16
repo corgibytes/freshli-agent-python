@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "freshli-agent-python"
+version = "0.1.0"
+description = "The Python language agent used by the Freshli CLI"
+license = "AGPL-3.0-or-later"
+authors = ["M. Scott Ford <scott@corgibytes.com>"]
+readme = "README.md"
+repository = "https://github.com/corgibytes/freshli-agent-python"
+packages = [{include = "corgibytes", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.11"
+typer = "^0.9.0"
+
+[tool.poetry.scripts]
+freshli-agent-python = "corgibytes.freshli.agent:app"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
