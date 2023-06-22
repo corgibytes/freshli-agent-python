@@ -1,6 +1,6 @@
 # [Freshli CLI](https://github.com/corgibytes/freshli-cli) Python Agent
 
-`freshli-agent-python' is the Python language agent that is used by the [Freshli CLI](https://github.com/corgibytes/freshli-cli) to analyze Python projects.
+`freshli-agent-python` is the Python language agent that is used by the [Freshli CLI](https://github.com/corgibytes/freshli-cli) to analyze Python projects.
 
 ## Building and Installing
 
