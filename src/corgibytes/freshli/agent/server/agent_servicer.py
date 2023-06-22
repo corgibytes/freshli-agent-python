@@ -1,12 +1,26 @@
-from corgibytes.freshli.agent.detect_manifests_command import DetectManifestsCommand
+import grpc
+
+from corgibytes.freshli.agent.commands.detect_manifests_command import DetectManifestsCommand
+from corgibytes.freshli.agent.grpc import freshli_agent_pb2_grpc
+from corgibytes.freshli.agent.grpc import freshli_agent_pb2
+from google.protobuf import empty_pb2
+
+import logging
 
 
-class AgentServicer(corgibytes.freshli.agent.freshli_agent_pb2_grpc.AgentServicer):
+class AgentServicer(freshli_agent_pb2_grpc.AgentServicer):
+    def __init__(self, server: grpc.Server):
+        self.server = server
+
     def DetectManifests(self, request, context):
-        command = DetectManifestsCommand(request.project_path)
+        command = DetectManifestsCommand(request.path)
         result = command.execute()
 
-        return corgibytes.freshli.agent.freshli_agent_pb2.DetectManifestsResponse(manifest_paths=result)
+        def generate():
+            for path in result:
+                yield freshli_agent_pb2.ManifestLocation(path=path)
+
+        return generate()
 
     def ProcessManifest(self, request, context):
         pass
@@ -21,4 +35,6 @@ class AgentServicer(corgibytes.freshli.agent.freshli_agent_pb2_grpc.AgentService
         pass
 
     def Shutdown(self, request, context):
-        pass
+        self.server.stop(0)
+        return empty_pb2.Empty()
+

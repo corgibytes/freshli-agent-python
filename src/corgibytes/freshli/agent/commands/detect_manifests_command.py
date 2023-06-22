@@ -1,6 +1,8 @@
 import os
 
-class DetectManifestsCommand:
+from corgibytes.freshli.agent.commands.command import Command
+
+class DetectManifestsCommand(Command):
     def __init__(self, project_path):
         self.project_path = project_path
     

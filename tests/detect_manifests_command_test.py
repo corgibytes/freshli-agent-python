@@ -1,7 +1,7 @@
 import pytest
 from expecter import expect
 
-from corgibytes.freshli.agent.detect_manifests_command import DetectManifestsCommand
+from corgibytes.freshli.agent.commands.detect_manifests_command import DetectManifestsCommand
 
 
 def describe_detect_manifests_command():
