@@ -1,10 +1,15 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'bundler/setup'
+
 require 'English'
 require 'fileutils'
 
-require_relative './support/execute'
+require 'corgibytes/freshli/commons/execute'
+# rubocop:disable Style/MixinUsage
+include Corgibytes::Freshli::Commons::Execute
+# rubocop:enable Style/MixinUsage
 
 enable_dotnet_command_colors
 
