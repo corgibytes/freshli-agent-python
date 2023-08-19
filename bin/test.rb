@@ -1,11 +1,16 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'bundler/setup'
+
 require 'English'
 require 'optparse'
 require 'fileutils'
 
-require_relative './support/execute'
+require 'corgibytes/freshli/commons/execute'
+# rubocop:disable Style/MixinUsage
+include Corgibytes::Freshli::Commons::Execute
+# rubocop:enable Style/MixinUsage
 
 enable_dotnet_command_colors
 
@@ -54,29 +59,6 @@ status = execute("ruby #{File.dirname(__FILE__)}/build.rb") if perform_build
 if status.nil? || status.success?
   status = execute("poetry check > #{null_output_target}")
   status = execute('poetry install') unless status.success?
-
-  FileUtils.mkdir_p('features/step_definitions/grpc')
-
-  if status.success?
-    status = execute(
-      'bundle exec grpc_tools_ruby_protoc -I ./protos/corgibytes/freshli/agent/grpc --ruby_out=./features/step_definitions/grpc ' \
-      '--grpc_out=./features/step_definitions/grpc ./protos/corgibytes/freshli/agent/grpc/freshli_agent.proto'
-    )
-  end
-
-  FileUtils.mkdir_p('tmp')
-
-  if status.success?
-    download(
-      'https://raw.githubusercontent.com/grpc/grpc/e35cf362a49b4de753cbe69f3e836d2e40408ca2' \
-      '/src/proto/grpc/health/v1/health.proto',
-      File.expand_path(File.join(File.dirname(__FILE__), '..', 'tmp', 'health.proto'))
-    )
-    status = execute(
-      'bundle exec grpc_tools_ruby_protoc -I tmp --ruby_out=features/step_definitions/grpc ' \
-      '--grpc_out=features/step_definitions/grpc tmp/health.proto'
-    )
-  end
 
   status = execute('poetry run pytest --cov=./src tests') if status.success?
   status = execute('bundle exec cucumber --color --backtrace') if status.success?
